@@ -15,4 +15,3 @@
 /tmp
 *.lock
 bundler_stubs/
-Gemfile.lock
