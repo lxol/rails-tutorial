@@ -89,3 +89,11 @@ a.signup_button {
     font-weight: bold;
     padding: 20px;
 }
+
+/* Round corners */
+
+.round {
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -border-radius: 10px;
+}
