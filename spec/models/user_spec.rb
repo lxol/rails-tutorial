@@ -31,6 +31,14 @@ describe User do
     it { should_not be_valid }
   end
 
+  describe "when email address is already taken" do
+    before do
+      user_with_same_email = @user.dup
+      user_with_same_email.save
+    end
+    it {should_not be_valid}
+  end
+
   describe "When email format is invalid" do
     invalid_addresses = %w[user@foo,com user_at_foo.org example.user@foo.]
     invalid_addresses.each do |invalid_address|
