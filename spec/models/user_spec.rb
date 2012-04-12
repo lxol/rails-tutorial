@@ -16,6 +16,7 @@ describe User do
   subject { @user }
   it { should respond_to(:name) }
   it { should respond_to(:email) }
+  it { should respond_to(:password_digest) }
 
   describe "When name is not present" do
     before { @user.name = " " }
