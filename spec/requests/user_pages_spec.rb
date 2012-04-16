@@ -12,6 +12,12 @@ describe "UserPages" do
       it "should not create a user" do
         expect {click_button "Create my account" }.not_to change(User, :count)
       end
+      describe "after saving the user" do
+        before {click_button "Create my account"}
+        it { should have_selector('title', text: "Sign up") }
+        it { should have_selector('div.alert.alert-error', text: 'error') }
+      end
+
     end
     describe "with valid information" do
       before do
