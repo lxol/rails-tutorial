@@ -23,7 +23,7 @@ describe "UserPages" do
       it "should create user" do
         expect do
           click_button "Create my account"
-        end.to_change(User, :count).by(1)
+        end.to change(User, :count).by(1)
       end
     end
   end
