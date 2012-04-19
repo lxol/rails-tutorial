@@ -106,5 +106,22 @@ describe "AuthenticationPages" do
         specify { response.should redirect_to(root_path) }
       end
     end
+
+    describe "as admin user" do
+      let(:admin_user) { FactoryGirl.create(:user) }
+
+      before do
+        admin_user.toggle!(:admin)
+        sign_in admin_user
+      end
+
+      describe "submitting a DELETE request to destroy itself" do
+        before { delete user_path(admin_user) }
+        let(:found_admin_user) { User.find(admin_user.id) }
+        subject { found_admin_user }
+        it { should respond_to(:name) }
+      end
+
+    end
   end
 end
