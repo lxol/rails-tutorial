@@ -157,4 +157,29 @@ describe "profile page" do
     it { should have_content(m2.content) }
   end
 
+  describe "with micropost pagination" do
+    before do
+      30.times { FactoryGirl.create(:micropost, user: user) }
+      visit user_path(user)
+    end
+    after { Micropost.delete_all }
+
+    let(:first_page) {user.microposts.paginate(page: 1) }
+    let(:second_page) {user.microposts.paginate(page: 2) }
+
+    it { should have_link('Next') }
+    it { should have_link('2') }
+
+    it "should list the first page of microposts" do
+      first_page.each do |each_micropost|
+        page.should have_selector('li', text: each_micropost.content)
+      end
+    end
+    it "should not list the second page of micropsts" do
+      second_page.each do |each_micropost|
+        page.should_not have_selector('li', text: each_micropost.content)
+      end
+    end
+  end
+
 end
