@@ -134,15 +134,52 @@ describe "profile page" do
   subject { page }
   let(:user) { FactoryGirl.create(:user) }
   let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Foo") }
-  let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Bar") }
 
   before { visit user_path(user) }
 
   it {should have_selector('h1', text: user.name) }
   it {should have_selector('title', text: user.name) }
-
   it { should have_content(m1.content) }
-  it { should have_content(m2.content) }
   it { should have_content(user.microposts.count) }
+
+  describe "with one micropost" do
+    it "should have selector " do
+      should have_selector('h3', text: /1 Micropost\b/)
+    end
+  end
+
+  describe "with two micropsts" do
+    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Bar") }
+    before { visit user_path(user) }
+    it "should have selector" do
+      should have_selector('h3', text: /2 Microposts/)
+    end
+    it { should have_content(m2.content) }
+  end
+
+  describe "with micropost pagination" do
+    before do
+      30.times { FactoryGirl.create(:micropost, user: user) }
+      visit user_path(user)
+    end
+    after { Micropost.delete_all }
+
+    let(:first_page) {user.microposts.paginate(page: 1) }
+    let(:second_page) {user.microposts.paginate(page: 2) }
+
+    it { should have_link('Next') }
+    it { should have_link('2') }
+
+    it "should list the first page of microposts" do
+      first_page.each do |each_micropost|
+        page.should have_selector('li', text: each_micropost.content)
+      end
+    end
+    it "should not list the second page of micropsts" do
+      second_page.each do |each_micropost|
+        page.should_not have_selector('li', text: each_micropost.content)
+      end
+    end
+  end
 
 end
